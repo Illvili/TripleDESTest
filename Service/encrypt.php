@@ -5,7 +5,7 @@
 // data to encrypt
 $message = "Hello 3DES! 中文测试";
 // key use to encrypt
-$key = "TestKey1234567890!!!";
+$key = "TestKey1234567890!!!!!!!";
 // initialization vector 8 bytes
 $iv = "iv123!!!";
 

@@ -5,7 +5,7 @@
 // data to decrypt
 $message = base64_decode($_POST['data']);
 // key use to encrypt
-$key = "TestKey1234567890!!!";
+$key = "TestKey1234567890!!!!!!!";
 // initialization vector 8 bytes
 $iv = "iv123!!!";
 
