@@ -4,11 +4,8 @@
 
 // data to decrypt
 $message = base64_decode($_POST['data']);
-// key use to encrypt
-$key = "TestKey1234567890!!!!!!!";
-// initialization vector 8 bytes
-$iv = "iv123!!!";
+// include key and iv config
+include 'tdes.config.php';
 
-
-echo mcrypt_decrypt(MCRYPT_3DES, $key, $message, MCRYPT_MODE_ECB, $iv);
+echo mcrypt_decrypt(MCRYPT_3DES, $key, $message, MCRYPT_MODE_CBC, $iv);
 ?>
