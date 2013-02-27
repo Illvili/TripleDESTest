@@ -12,47 +12,62 @@ namespace TripleDESTest
 {
     public partial class Main : Form
     {
-        byte[] key;
-        byte[] iv;
         TripleDES tripledes;
 
         public Main()
         {
             InitializeComponent();
 
-            key = Encoding.UTF8.GetBytes("TestKey1234567890!!!!!!!");
-            iv = Encoding.UTF8.GetBytes("iv123!!!");
-
-            textbox.Text = "Hello 3DES! 中文测试";
+            plaintext.Text = "Hello 3DES! 中文测试";
 
             tripledes = TripleDES.Create();
 
             // important!!!
-            tripledes.Mode = CipherMode.ECB;
+            tripledes.Mode = CipherMode.CBC;
             tripledes.Padding = PaddingMode.Zeros;
         }
 
         private void EncryptData_Click(object sender, EventArgs e)
         {
-            byte[] data = Encoding.UTF8.GetBytes(textbox.Text);
-            ICryptoTransform transform = tripledes.CreateEncryptor(key, iv);
-            byte[] encrypted = transform.TransformFinalBlock(data, 0, data.Length);
-            textbox.Text = Convert.ToBase64String(encrypted);
-
-            transform.Dispose();
-            tripledes.Clear();
+            try
+            {
+                byte[] data = Encoding.UTF8.GetBytes(plaintext.Text);
+                using (ICryptoTransform transform = tripledes.CreateEncryptor(Encoding.UTF8.GetBytes(TDESKey.Text), Encoding.UTF8.GetBytes(TDESIV.Text)))
+                {
+                    byte[] encrypted = transform.TransformFinalBlock(data, 0, data.Length);
+                    ciphertext.Text = Convert.ToBase64String(encrypted);
+                }
+            }
+            catch (Exception ex)
+            {
+                ciphertext.Text = ex.Message;
+            }
+            finally
+            {
+                tripledes.Clear();
+            }
         }
 
         private void DecryptData_Click(object sender, EventArgs e)
         {
-            char[] encrypted = textbox.Text.ToCharArray();
-            byte[] data = Convert.FromBase64CharArray(encrypted, 0, encrypted.Length);
-            ICryptoTransform transform = tripledes.CreateDecryptor(key, iv);
-            byte[] decrypted = transform.TransformFinalBlock(data, 0, data.Length);
-            textbox.Text = Encoding.UTF8.GetString(decrypted);
-
-            transform.Dispose();
-            tripledes.Clear();
+            try
+            {
+                char[] encrypted = ciphertext.Text.ToCharArray();
+                byte[] data = Convert.FromBase64CharArray(encrypted, 0, encrypted.Length);
+                using (ICryptoTransform transform = tripledes.CreateDecryptor(Encoding.UTF8.GetBytes(TDESKey.Text), Encoding.UTF8.GetBytes(TDESIV.Text)))
+                {
+                    byte[] decrypted = transform.TransformFinalBlock(data, 0, data.Length);
+                    plaintext.Text = Encoding.UTF8.GetString(decrypted);
+                }
+            }
+            catch (Exception ex)
+            {
+                plaintext.Text = ex.Message;
+            }
+            finally
+            {
+                tripledes.Clear();
+            }
         }
     }
 }
