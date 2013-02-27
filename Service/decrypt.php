@@ -7,5 +7,5 @@ $message = base64_decode($_POST['data']);
 // include key and iv config
 include 'tdes.config.php';
 
-echo mcrypt_decrypt(MCRYPT_3DES, $key, $message, MCRYPT_MODE_CBC, $iv);
+echo rtrim(mcrypt_decrypt(MCRYPT_3DES, $key, $message, MCRYPT_MODE_CBC, $iv), "\0");
 ?>
